@@ -59,6 +59,7 @@ class CupertinoTabBar extends StatelessWidget implements PreferredSizeWidget {
     this.activeColor,
     this.inactiveColor = _kDefaultTabBarInactiveColor,
     this.iconSize = 30.0,
+    this.height = _kTabBarHeight,
     this.border = const Border(
       top: BorderSide(
         color: _kDefaultTabBarBorderColor,
@@ -75,6 +76,8 @@ class CupertinoTabBar extends StatelessWidget implements PreferredSizeWidget {
        assert(0 <= currentIndex && currentIndex < items.length),
        assert(iconSize != null),
        assert(inactiveColor != null),
+       assert(height != null),
+       this._preferredSize = Size.fromHeight(height),
        super(key: key);
 
   /// The interactive items laid out within the bottom navigation bar.
@@ -123,14 +126,22 @@ class CupertinoTabBar extends StatelessWidget implements PreferredSizeWidget {
   ///
   /// Must not be null.
   final double iconSize;
+  
+  /// The height of the [CupertinoTabBar].
+  ///
+  /// Defaults to [_kTabBarHeight] if null.
+  final double height;
 
   /// The border of the [CupertinoTabBar].
   ///
   /// The default value is a one physical pixel top border with grey color.
   final Border? border;
+  
+  /// Performance optimization to match `const Size.fromHeight(_kTabBarHeight)`.
+  final Size _preferredSize;
 
   @override
-  Size get preferredSize => const Size.fromHeight(_kTabBarHeight);
+  Size get preferredSize => _preferredSize;
 
   /// Indicates whether the tab bar is fully opaque or can have contents behind
   /// it show through it.
@@ -173,7 +184,7 @@ class CupertinoTabBar extends StatelessWidget implements PreferredSizeWidget {
         color: backgroundColor,
       ),
       child: SizedBox(
-        height: _kTabBarHeight + bottomPadding,
+        height: height + bottomPadding,
         child: IconTheme.merge( // Default with the inactive state.
           data: IconThemeData(color: inactive, size: iconSize),
           child: DefaultTextStyle( // Default with the inactive state.
@@ -288,12 +299,14 @@ class CupertinoTabBar extends StatelessWidget implements PreferredSizeWidget {
     Color? activeColor,
     Color? inactiveColor,
     double? iconSize,
+    double? height,
     Border? border,
     int? currentIndex,
     ValueChanged<int>? onTap,
   }) {
     return CupertinoTabBar(
       key: key ?? this.key,
+      height: height ?? this.height,
       items: items ?? this.items,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       activeColor: activeColor ?? this.activeColor,
